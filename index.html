@@ -1,294 +1,402 @@
 <title>Тест Адизеса PAEI</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap">
 
 <style>
-/* === TOKENS — dark-first, single theme === */
-:root {
-  --bg:#07070e; --bg2:#0d0d1a;
-  --sf:rgba(255,255,255,.055); --sf2:rgba(255,255,255,.09); --sf3:rgba(255,255,255,.13);
-  --bd:rgba(255,255,255,.08); --bd2:rgba(255,255,255,.18);
-  --p:#F59E0B; --p-dim:rgba(245,158,11,.13);
-  --a:#60A5FA; --a-dim:rgba(96,165,250,.13);
-  --e:#A78BFA; --e-dim:rgba(167,139,250,.13);
-  --i:#34D399; --i-dim:rgba(52,211,153,.13);
-  --t1:#F1F5F9; --t2:#CBD5E1; --t3:#94A3B8; --t4:#56607a;
-  --rad:20px; --rad-s:14px; --rad-xs:8px;
-  --fd:'Space Grotesk',system-ui,sans-serif; --fb:'Inter',system-ui,sans-serif;
-  color-scheme: dark;
+/* ============ DESIGN SYSTEM — Premium Dark Glassmorphism ============ */
+/* Layout: single dark digital environment; content floats on depth layers */
+:root{
+  /* surfaces */
+  --bg:#101115; --bg2:#17181E; --surface:#1F2028; --raised:#25252F;
+  /* lavender light system */
+  --lav:#BEB4E6; --lav2:#9D8FD1; --smoke:#77718F;
+  /* text */
+  --t1:#D8D7E0; --t2:#9998A5; --t3:#696976;
+  /* lines */
+  --bd:rgba(210,204,235,.10); --bd2:rgba(210,204,235,.17);
+  /* category tones (muted, harmonized into the palette) */
+  --p:#D9A86B; --a:#86A2DE; --e:#C3B5EC; --i:#83C4AC;
+  --p-d:rgba(217,168,107,.14); --a-d:rgba(134,162,222,.14); --e-d:rgba(195,181,236,.14); --i-d:rgba(131,196,172,.14);
+  /* geometry */
+  --r-lg:26px; --r-md:18px; --r-sm:13px;
+  /* shadow & glow */
+  --sh:0 14px 44px rgba(0,0,0,.34); --sh-sm:0 8px 24px rgba(0,0,0,.26);
+  --inset:inset 0 1px 0 rgba(255,255,255,.045);
+  /* motion */
+  --ease:cubic-bezier(.16,1,.3,1); --dur:.5s;
+  /* type */
+  --fh:'Manrope',system-ui,sans-serif; --fb:'Manrope','Inter',system-ui,sans-serif;
+  color-scheme:dark;
 }
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
 html,body{ height:100%; }
 body{
   background:var(--bg); color:var(--t1); font-family:var(--fb);
-  font-size:16px; line-height:1.5; overflow-x:hidden;
-  padding-left:max(16px,env(safe-area-inset-left,0px));
-  padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:0;
-  -webkit-tap-highlight-color:transparent;
+  font-size:16px; line-height:1.55; overflow-x:hidden; position:relative;
+  padding-left:max(18px,env(safe-area-inset-left,0px));
+  padding-right:max(18px,env(safe-area-inset-right,0px));
+  padding-block:0; -webkit-tap-highlight-color:transparent; -webkit-font-smoothing:antialiased;
 }
-@media (prefers-reduced-motion: reduce){ *{ animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+@media (prefers-reduced-motion:reduce){ *{ animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
 
-/* === SCREENS === */
-.screen{ display:none; flex-direction:column; animation:fi .4s ease; }
-.screen.active{ display:flex; min-height:100dvh; }
-@keyframes fi{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+/* ---- atmospheric background (fixed, behind everything) ---- */
+.bg-field{ position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(900px 700px at 78% -8%, rgba(126,110,170,.20), transparent 60%),
+    radial-gradient(760px 620px at 8% 108%, rgba(96,86,140,.16), transparent 62%),
+    radial-gradient(120% 120% at 50% 0%, #15161d 0%, #101115 46%, #0b0b0f 100%); }
+.bg-vignette{ position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:radial-gradient(130% 100% at 50% 40%, transparent 58%, rgba(0,0,0,.42) 100%); }
+.bg-grain{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.035; mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-/* === WELCOME === */
-#s-welcome{ justify-content:center; align-items:center; padding-block:60px; position:relative; overflow:hidden; }
-.w-glow{ position:absolute; top:-120px; left:50%; translate:-50% 0; width:700px; height:700px; border-radius:50%; pointer-events:none;
-  background:radial-gradient(circle,rgba(124,58,237,.22) 0%,rgba(79,70,229,.07) 40%,transparent 70%); }
-.w-dots{ position:absolute; inset:0; pointer-events:none;
-  background-image:radial-gradient(circle,rgba(255,255,255,.075) 1px,transparent 1px); background-size:28px 28px;
-  -webkit-mask-image:radial-gradient(ellipse 65% 70% at 50% 35%,black 0%,transparent 100%);
-  mask-image:radial-gradient(ellipse 65% 70% at 50% 35%,black 0%,transparent 100%); }
-.w-inner{ position:relative; width:100%; max-width:440px; display:flex; flex-direction:column; gap:32px; }
-.w-hero{ text-align:center; display:flex; flex-direction:column; gap:10px; }
-.paei-logo{ font-family:var(--fd); font-size:clamp(60px,14vw,88px); font-weight:700; letter-spacing:-3px; line-height:1;
-  background:linear-gradient(140deg,#C4B5FD 0%,#7C3AED 45%,#60A5FA 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.w-sub{ font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--t3); }
-.w-desc{ font-size:15px; color:var(--t2); line-height:1.65; text-align:center; max-width:340px; margin:0 auto; }
-.form-card{ background:var(--sf); border:1px solid var(--bd); border-radius:var(--rad); padding:24px; display:flex; flex-direction:column; gap:14px; }
-.field{ display:flex; flex-direction:column; gap:6px; }
-.field label{ font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--t3); }
-.field input{ background:rgba(255,255,255,.05); border:1px solid var(--bd); border-radius:var(--rad-s); padding:14px 16px;
+/* ---- shared ---- */
+.glass{ background:linear-gradient(145deg,rgba(48,47,59,.66),rgba(27,28,36,.86)); border:1px solid var(--bd);
+  border-radius:var(--r-lg); box-shadow:var(--sh),var(--inset); -webkit-backdrop-filter:blur(22px); backdrop-filter:blur(22px); }
+.eyebrow{ font-size:12px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--smoke); }
+
+/* ---- sphere ---- */
+.sphere{ position:relative; border-radius:50%; aspect-ratio:1;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(226,221,240,.60), rgba(170,160,200,.22) 26%, transparent 50%),
+    radial-gradient(circle at 50% 118%, rgba(10,10,15,.92), transparent 58%),
+    radial-gradient(circle at 50% 44%, #3b3648 0%, #272532 52%, #17161e 100%);
+  box-shadow: inset 0 3px 14px rgba(255,255,255,.14), inset 0 -34px 70px rgba(0,0,0,.55),
+    inset 0 0 0 1px rgba(210,204,235,.06), 0 40px 90px rgba(0,0,0,.5); }
+.sphere::after{ content:''; position:absolute; left:24%; top:14%; width:34%; height:22%; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%); filter:blur(5px); opacity:.5; }
+.sphere-glow{ position:absolute; inset:-18% -18%; border-radius:50%; z-index:-1; pointer-events:none;
+  background:radial-gradient(circle, rgba(159,143,209,.34) 0%, rgba(119,113,143,.12) 40%, transparent 72%); filter:blur(30px);
+  animation:breathe 7s ease-in-out infinite; }
+@keyframes breathe{ 0%,100%{opacity:.6; transform:scale(1)} 50%{opacity:.95; transform:scale(1.05)} }
+@keyframes floaty{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes spin{ to{ transform:rotate(360deg) } }
+
+/* ---- buttons ---- */
+.btn{ display:flex; align-items:center; justify-content:center; gap:9px; font-family:var(--fh);
+  font-size:15px; font-weight:600; border-radius:var(--r-sm); border:1px solid transparent; cursor:pointer;
+  padding:15px 24px; width:100%; transition:transform .18s var(--ease), opacity .2s, box-shadow .25s, background .25s; }
+.btn-primary{ color:#fff; background:linear-gradient(135deg,#8678b4 0%,#6f63a0 100%);
+  box-shadow:0 10px 30px rgba(130,116,180,.34), var(--inset); }
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 14px 38px rgba(130,116,180,.44), var(--inset); }
+.btn-primary:active{ transform:translateY(0); }
+.btn-primary:disabled{ opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-ghost{ color:var(--t2); background:rgba(255,255,255,.02); border:1px solid var(--bd); }
+.btn-ghost:hover{ color:var(--t1); background:rgba(255,255,255,.05); border-color:var(--bd2); }
+.btn:focus-visible,.step:focus-visible,input:focus-visible,.tc-head:focus-visible{ outline:2px solid var(--lav); outline-offset:3px; }
+
+/* ---- screens ---- */
+.screen{ display:none; flex-direction:column; min-height:100dvh; }
+.screen.active{ display:flex; animation:fin .55s var(--ease); }
+@keyframes fin{ from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none} }
+.wrap{ width:100%; max-width:1180px; margin:0 auto; flex:1; display:flex; flex-direction:column; }
+.sig{ text-align:center; font-size:12px; color:var(--t3); letter-spacing:.02em; padding:26px 0 30px; }
+.sig b{ color:var(--smoke); font-weight:600; }
+
+/* ============ WELCOME ============ */
+#s-welcome .wrap{ justify-content:center; }
+.hero{ display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:40px; padding:56px 0 20px; }
+.hero-copy{ display:flex; flex-direction:column; gap:20px; }
+.paei-mark{ font-family:var(--fh); font-weight:800; font-size:clamp(46px,7vw,74px); line-height:1; letter-spacing:-.02em; color:var(--t1); }
+.paei-mark span{ background:linear-gradient(120deg,#E7E2F5,#BEB4E6 55%,#8F82C4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-h1{ font-family:var(--fh); font-weight:700; font-size:clamp(26px,3.4vw,38px); line-height:1.15; letter-spacing:-.01em; text-wrap:balance; }
+.hero-p{ font-size:16px; color:var(--t2); line-height:1.65; max-width:46ch; }
+.form-card{ padding:22px; display:flex; flex-direction:column; gap:14px; margin-top:4px; }
+.field{ display:flex; flex-direction:column; gap:7px; }
+.field label{ font-size:11px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--t2); }
+.field input{ background:rgba(16,17,21,.6); border:1px solid var(--bd); border-radius:var(--r-sm); padding:14px 16px;
   font-family:var(--fb); font-size:16px; color:var(--t1); outline:none; transition:border-color .2s,background .2s; }
-.field input::placeholder{ color:var(--t4); }
-.field input:focus{ border-color:rgba(124,58,237,.6); background:rgba(124,58,237,.06); }
-.btn-primary{ display:flex; align-items:center; justify-content:center; gap:8px;
-  background:linear-gradient(135deg,#7C3AED,#4F46E5); color:#fff; font-family:var(--fd); font-size:15px; font-weight:600;
-  padding:16px 24px; border-radius:var(--rad-s); border:none; cursor:pointer; width:100%; transition:opacity .2s,transform .15s; }
-.btn-primary:hover{ opacity:.92; transform:translateY(-1px); }
-.btn-primary:active{ transform:none; opacity:.85; }
-.btn-primary:disabled{ opacity:.35; cursor:not-allowed; transform:none; }
-.btn-primary:focus-visible, .sc-btn:focus-visible, .field input:focus-visible, .btn-restart:focus-visible, .tc-head:focus-visible{ outline:2px solid #A78BFA; outline-offset:2px; }
-.w-meta{ text-align:center; font-size:13px; color:var(--t4); }
+.field input::placeholder{ color:var(--t3); }
+.field input:focus{ border-color:rgba(190,180,230,.5); background:rgba(190,180,230,.05); }
+.hero-meta{ font-size:13px; color:var(--t3); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.hero-meta .dot{ width:3px; height:3px; border-radius:50%; background:var(--t3); }
+.hero-visual{ display:flex; align-items:center; justify-content:center; }
+.orb{ position:relative; width:min(380px,74vw); aspect-ratio:1; animation:floaty 8s ease-in-out infinite; }
+.orb .sphere{ position:absolute; inset:14%; }
+.orbit{ position:absolute; inset:0; border:1px solid rgba(210,204,235,.12); border-radius:50%; animation:spin 34s linear infinite; }
+.orbit.b{ inset:9%; border-color:rgba(210,204,235,.07); animation-duration:52s; animation-direction:reverse; }
+.orb-node{ position:absolute; display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px;
+  font-family:var(--fh); font-weight:700; font-size:16px; background:rgba(31,32,40,.8); border:1px solid var(--bd2);
+  box-shadow:var(--sh-sm); top:50%; left:50%; }
+.orb-node.n0{ transform:translate(-50%,-50%) translateY(calc(min(190px,37vw) * -1)); color:var(--p); }
+.orb-node.n1{ transform:translate(-50%,-50%) translateX(calc(min(190px,37vw))); color:var(--a); }
+.orb-node.n2{ transform:translate(-50%,-50%) translateY(calc(min(190px,37vw))); color:var(--e); }
+.orb-node.n3{ transform:translate(-50%,-50%) translateX(calc(min(190px,37vw) * -1)); color:var(--i); }
 
-/* === TEST === */
-#s-test{ padding-block:24px 36px; max-width:560px; margin:0 auto; width:100%; }
-.t-header{ display:flex; flex-direction:column; gap:14px; padding-bottom:20px; }
-.t-nav{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.grp-lbl{ font-family:var(--fd); font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--t3); white-space:nowrap; }
-.pdots{ display:flex; gap:6px; align-items:center; }
-.pdot{ width:8px; height:8px; border-radius:50%; background:var(--sf3); transition:background .3s,transform .2s; }
-.pdot.done{ background:rgba(124,58,237,.45); }
-.pdot.cur{ background:#7C3AED; transform:scale(1.45); box-shadow:0 0 8px rgba(124,58,237,.8); }
-.pbar{ height:3px; background:var(--sf3); border-radius:2px; overflow:hidden; }
-.pbar-fill{ height:100%; background:linear-gradient(90deg,#7C3AED,#4F46E5); border-radius:2px; transition:width .4s ease; }
-.t-hint{ font-size:13px; color:var(--t3); line-height:1.55; }
-.t-hint strong{ color:var(--t2); }
-.adj-list{ display:flex; flex-direction:column; gap:10px; flex:1; }
-.adj-card{ background:var(--sf); border:1.5px solid var(--bd); border-radius:var(--rad-s); padding:15px 16px;
-  display:flex; align-items:center; justify-content:space-between; gap:12px; transition:border-color .2s,background .2s; }
-.adj-card.sel{ background:rgba(124,58,237,.07); border-color:rgba(124,58,237,.3); }
-.adj-txt{ font-size:15px; font-weight:500; flex:1; min-width:0; line-height:1.3; }
-.sc-btns{ display:flex; gap:5px; flex-shrink:0; }
-.sc-btn{ width:36px; height:36px; border-radius:50%; border:1.5px solid var(--bd2); background:transparent; color:var(--t3);
-  font-family:var(--fb); font-size:14px; font-weight:600; cursor:pointer; transition:all .15s;
-  display:flex; align-items:center; justify-content:center; }
-.sc-btn:hover:not(:disabled){ background:var(--sf2); border-color:rgba(124,58,237,.5); color:var(--t1); }
-.sc-btn.on{ background:linear-gradient(135deg,#7C3AED,#4F46E5); border-color:transparent; color:#fff; box-shadow:0 2px 10px rgba(124,58,237,.5); transform:scale(1.05); }
-.sc-btn:disabled{ opacity:.22; cursor:not-allowed; }
-.t-footer{ padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-.btn-back{ background:none; border:none; color:var(--t3); font-family:var(--fb); font-size:14px; cursor:pointer; padding:8px; align-self:center; transition:color .2s; }
-.btn-back:hover{ color:var(--t1); }
-.btn-back[hidden]{ display:none; }
+/* ============ TEST ============ */
+#s-test .wrap{ max-width:620px; padding-block:30px 10px; }
+.t-head{ padding:20px 22px; display:flex; flex-direction:column; gap:15px; margin-bottom:16px; }
+.t-top{ display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.t-step{ font-family:var(--fh); font-size:13px; font-weight:600; letter-spacing:.06em; color:var(--t2); white-space:nowrap; }
+.pdots{ display:flex; gap:6px; flex-wrap:wrap; }
+.pdot{ width:7px; height:7px; border-radius:50%; background:rgba(210,204,235,.14); transition:.3s var(--ease); }
+.pdot.done{ background:rgba(190,180,230,.5); }
+.pdot.cur{ background:var(--lav); transform:scale(1.5); box-shadow:0 0 10px rgba(190,180,230,.7); }
+.pbar{ height:3px; background:rgba(210,204,235,.1); border-radius:2px; overflow:hidden; }
+.pbar-f{ height:100%; background:linear-gradient(90deg,var(--lav2),var(--lav)); border-radius:2px; transition:width .5s var(--ease); }
+.t-instruct{ display:flex; align-items:center; gap:16px; padding:2px 2px 0; }
+.t-instruct p{ font-size:14px; color:var(--t2); line-height:1.5; flex:1; }
+.ring{ --pct:0; position:relative; width:62px; height:62px; flex-shrink:0; border-radius:50%;
+  background:conic-gradient(var(--lav) calc(var(--pct)*1%), rgba(210,204,235,.1) 0);
+  -webkit-mask:radial-gradient(farthest-side,transparent 67%,#000 68%); mask:radial-gradient(farthest-side,transparent 67%,#000 68%);
+  transition:background .3s var(--ease); }
+.ring-wrap{ position:relative; width:62px; height:62px; flex-shrink:0; display:grid; place-items:center; }
+.ring-txt{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; }
+.ring-num{ font-family:var(--fh); font-weight:700; font-size:16px; color:var(--t1); font-variant-numeric:tabular-nums; }
+.ring-num.full{ color:var(--lav); }
+.ring-lbl{ font-size:9px; color:var(--t3); margin-top:2px; }
+.adj-list{ display:flex; flex-direction:column; gap:10px; }
+.adj-row{ padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border-radius:var(--r-md); background:linear-gradient(145deg,rgba(45,44,56,.5),rgba(26,27,34,.7)); border:1px solid var(--bd);
+  transition:border-color .2s,background .2s; }
+.adj-row.active{ border-color:rgba(190,180,230,.32); background:linear-gradient(145deg,rgba(60,56,78,.55),rgba(30,30,40,.75)); }
+.adj-name{ font-size:15px; font-weight:500; color:var(--t1); flex:1; min-width:0; line-height:1.3; }
+.stepper{ display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.step{ width:34px; height:34px; border-radius:11px; border:1px solid var(--bd2); background:rgba(255,255,255,.03); color:var(--t2);
+  font-size:19px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.15s; line-height:1; }
+.step:hover:not(:disabled){ background:rgba(190,180,230,.14); color:var(--lav); border-color:rgba(190,180,230,.4); }
+.step:disabled{ opacity:.3; cursor:not-allowed; }
+.step-val{ width:30px; text-align:center; font-family:var(--fh); font-weight:700; font-size:18px; font-variant-numeric:tabular-nums;
+  color:var(--t3); transition:color .2s; }
+.step-val.on{ color:var(--lav); }
+.t-foot{ display:flex; flex-direction:column; gap:10px; padding:18px 0 4px; }
+.t-back{ background:none; border:none; color:var(--t3); font-family:var(--fb); font-size:14px; cursor:pointer; padding:9px; align-self:center; transition:color .2s; }
+.t-back:hover{ color:var(--t1); }
+.t-back[hidden]{ display:none; }
 
-/* === RESULTS === */
-#s-results{ padding-block:32px 60px; max-width:600px; margin:0 auto; width:100%; gap:22px; }
-.res-head{ display:flex; flex-direction:column; gap:4px; }
-.res-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--t3); }
-.res-name{ font-family:var(--fd); font-size:clamp(24px,5vw,34px); font-weight:700; }
-.res-date{ font-size:13px; color:var(--t3); }
-.type-hero{ position:relative; overflow:hidden; }
-.th-glow{ position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; opacity:.18; pointer-events:none; }
-.th-eye{ font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.7; }
-.th-name{ font-family:var(--fd); font-size:clamp(28px,6vw,42px); font-weight:700; line-height:1.1; }
-.th-tag{ font-size:14px; opacity:.8; font-style:italic; }
-.th-insight{ font-size:14px; color:var(--t2); line-height:1.55; margin-top:6px; }
-.th-pills{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-.th-pill{ font-family:var(--fd); font-size:13px; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid; font-variant-numeric:tabular-nums; }
-.scores-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-@media (min-width:480px){ .scores-grid{ grid-template-columns:repeat(4,1fr); } }
-.stile{ background:var(--sf); border:1px solid var(--bd); border-radius:var(--rad-s); padding:16px; display:flex; flex-direction:column; gap:6px; position:relative; overflow:hidden; transition:border-color .2s; }
-.stile.dom{ border-color:var(--tc); }
-.stile::after{ content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--tc); opacity:.6; }
-.st-lbl{ font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--tc); }
-.st-num{ font-family:var(--fd); font-size:38px; font-weight:700; color:var(--tc); line-height:1; font-variant-numeric:tabular-nums; }
-.st-name{ font-size:11px; color:var(--t3); }
-.sec-title{ font-family:var(--fd); font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--t4); }
-.chart-wrap{ background:var(--sf); border:1px solid var(--bd); border-radius:var(--rad); padding:20px; display:flex; justify-content:center; }
-.radar-box{ width:100%; max-width:340px; }
-.radar-box svg{ width:100%; height:auto; display:block; overflow:visible; }
-.radar-data{ transform:scale(.08); transform-origin:150px 150px; opacity:0; transition:transform .9s cubic-bezier(.16,1,.3,1), opacity .5s ease; }
+/* ============ RESULTS ============ */
+#s-results .wrap{ max-width:660px; padding-block:34px 0; gap:22px; display:flex; flex-direction:column; }
+.r-head{ display:flex; flex-direction:column; gap:5px; }
+.r-name{ font-family:var(--fh); font-weight:700; font-size:clamp(25px,5vw,34px); line-height:1.1; }
+.r-date{ font-size:13px; color:var(--t2); }
+/* hero result */
+.r-hero{ padding:26px; display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:center; position:relative; overflow:hidden; }
+.rh-orb{ position:relative; width:128px; height:128px; flex-shrink:0; }
+.rh-orb .sphere{ position:absolute; inset:0; }
+.rh-val{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; z-index:1; }
+.rh-letter{ font-family:var(--fh); font-weight:800; font-size:40px; }
+.rh-pct{ font-size:13px; color:var(--t2); margin-top:3px; font-variant-numeric:tabular-nums; }
+.rh-copy{ display:flex; flex-direction:column; gap:7px; min-width:0; }
+.rh-name{ font-family:var(--fh); font-weight:700; font-size:clamp(22px,4.4vw,30px); line-height:1.1; }
+.rh-tag{ font-size:14px; color:var(--t2); font-style:italic; }
+.rh-insight{ font-size:14px; color:var(--t2); line-height:1.55; margin-top:3px; }
+.pills{ display:flex; gap:7px; flex-wrap:wrap; margin-top:7px; }
+.pill{ font-family:var(--fh); font-size:12px; font-weight:600; padding:4px 11px; border-radius:20px; border:1px solid; font-variant-numeric:tabular-nums; }
+/* tiles */
+.tiles{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; }
+@media(min-width:520px){ .tiles{ grid-template-columns:repeat(4,1fr); } }
+.tile{ padding:16px; border-radius:var(--r-md); background:linear-gradient(145deg,rgba(45,44,56,.5),rgba(26,27,34,.75)); border:1px solid var(--bd); position:relative; overflow:hidden; display:flex; flex-direction:column; gap:10px; }
+.tile.dom{ border-color:color-mix(in srgb, var(--tc) 50%, transparent); box-shadow:0 0 0 1px color-mix(in srgb,var(--tc) 22%,transparent), 0 10px 30px rgba(0,0,0,.3); }
+.tile-badge{ width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--tc); background:var(--tc-d); }
+.tile-badge svg{ width:18px; height:18px; }
+.tile-num{ font-family:var(--fh); font-weight:800; font-size:30px; line-height:1; color:var(--t1); font-variant-numeric:tabular-nums; }
+.tile-num small{ font-size:15px; color:var(--t2); font-weight:600; }
+.tile-name{ font-size:11px; color:var(--t2); }
+.tile-lbl{ position:absolute; top:14px; right:14px; font-family:var(--fh); font-weight:700; font-size:12px; color:var(--tc); opacity:.6; }
+/* section */
+.sec{ display:flex; flex-direction:column; gap:12px; }
+.sec-h{ font-family:var(--fh); font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--smoke); padding-left:2px; }
+.panel{ padding:22px; }
+.radar-box{ display:flex; justify-content:center; }
+.radar-box svg{ width:100%; max-width:330px; height:auto; overflow:visible; }
+.radar-data{ transform:scale(.06); transform-origin:150px 150px; opacity:0; transition:transform 1s var(--ease),opacity .5s; }
 .radar-data.in{ transform:scale(1); opacity:1; }
-.barchart{ display:flex; flex-direction:column; gap:14px; width:100%; }
-.bar-row{ display:flex; align-items:center; gap:12px; }
-.bar-lbl{ font-family:var(--fd); font-size:13px; font-weight:700; width:18px; flex-shrink:0; font-variant-numeric:tabular-nums; }
-.bar-track{ flex:1; height:10px; background:rgba(255,255,255,.06); border-radius:5px; overflow:hidden; }
-.bar-fill{ height:100%; border-radius:5px; width:0; transition:width .9s cubic-bezier(.16,1,.3,1); }
-.bar-val{ font-size:13px; font-weight:600; color:var(--t2); width:28px; text-align:right; flex-shrink:0; font-variant-numeric:tabular-nums; }
-.type-cards{ display:flex; flex-direction:column; gap:8px; }
-.tc{ background:var(--sf); border:1.5px solid var(--bd); border-radius:var(--rad-s); overflow:hidden; transition:border-color .2s; }
+.bars{ display:flex; flex-direction:column; gap:15px; }
+.bar{ display:flex; align-items:center; gap:13px; }
+.bar-k{ font-family:var(--fh); font-weight:700; font-size:13px; width:16px; flex-shrink:0; color:var(--tc); }
+.bar-tr{ flex:1; height:9px; background:rgba(210,204,235,.07); border-radius:5px; overflow:hidden; }
+.bar-f{ height:100%; border-radius:5px; width:0; transition:width 1s var(--ease); background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 70%,#000),var(--tc)); }
+.bar-v{ font-size:13px; font-weight:600; color:var(--t1); width:40px; text-align:right; flex-shrink:0; font-variant-numeric:tabular-nums; }
+.bar-v small{ color:var(--t3); font-weight:400; }
+/* type cards */
+.tcards{ display:flex; flex-direction:column; gap:9px; }
+.tc{ border-radius:var(--r-md); background:linear-gradient(145deg,rgba(45,44,56,.45),rgba(26,27,34,.7)); border:1px solid var(--bd); overflow:hidden; transition:border-color .2s; }
 .tc:hover{ border-color:var(--bd2); }
-.tc-head{ padding:16px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; background:none; border:none; width:100%; text-align:left; color:inherit; font-family:inherit; }
-.tc-ico{ width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-.tc-info{ flex:1; min-width:0; }
-.tc-name{ font-family:var(--fd); font-size:15px; font-weight:600; }
-.tc-sub{ font-size:12px; color:var(--t3); margin-top:2px; }
-.tc-chev{ color:var(--t4); transition:transform .25s; font-size:12px; flex-shrink:0; }
-.tc.open .tc-chev{ transform:rotate(180deg); }
-.tc-body{ padding:0 18px; max-height:0; overflow:hidden; transition:max-height .35s ease,padding-bottom .25s; }
-.tc.open .tc-body{ max-height:640px; padding-bottom:18px; }
-.tc-desc{ font-size:14px; color:var(--t2); line-height:1.65; border-top:1px solid var(--bd); padding-top:14px; margin-bottom:12px; }
-.tag-row{ display:flex; flex-wrap:wrap; gap:6px; }
-.tag{ font-size:12px; font-weight:500; padding:4px 10px; border-radius:20px; }
-.sec-mini{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--t4); margin-bottom:8px; }
-.res-actions{ display:flex; flex-direction:column; gap:10px; margin-top:4px; }
-.btn-restart{ background:var(--sf); border:1px solid var(--bd); color:var(--t3); font-family:var(--fb); font-size:14px; font-weight:500; padding:14px 24px; border-radius:var(--rad-s); cursor:pointer; width:100%; transition:background .2s,color .2s; }
-.btn-restart:hover{ background:var(--sf2); color:var(--t1); }
+.tc-head{ width:100%; padding:15px 17px; display:flex; align-items:center; gap:13px; cursor:pointer; background:none; border:none; text-align:left; color:inherit; font-family:inherit; }
+.tc-ic{ width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; color:var(--tc); background:var(--tc-d); flex-shrink:0; }
+.tc-ic svg{ width:20px; height:20px; }
+.tc-meta{ flex:1; min-width:0; }
+.tc-nm{ font-family:var(--fh); font-weight:600; font-size:15px; color:var(--t1); }
+.tc-sub{ font-size:12px; color:var(--t2); margin-top:2px; }
+.tc-ch{ color:var(--t3); font-size:11px; transition:transform .25s; flex-shrink:0; }
+.tc.open .tc-ch{ transform:rotate(180deg); }
+.tc-body{ max-height:0; overflow:hidden; transition:max-height .35s var(--ease); }
+.tc.open .tc-body{ max-height:680px; }
+.tc-inner{ padding:0 17px 17px; }
+.tc-desc{ font-size:14px; color:var(--t2); line-height:1.65; border-top:1px solid var(--bd); padding-top:14px; margin-bottom:13px; }
+.mini-h{ font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--t3); margin-bottom:8px; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.chip{ font-size:12px; font-weight:500; padding:4px 11px; border-radius:16px; }
+.r-actions{ display:flex; flex-direction:column; gap:10px; margin-top:2px; }
 
-/* === CERT MODAL === */
-.cert-back{ position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; animation:fi .25s ease; -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
-.cert-back[hidden]{ display:none!important; }
-.cert-box{ background:#fff; color:#111; border-radius:var(--rad); width:100%; max-width:520px; max-height:92dvh; overflow-y:auto; position:relative; }
-.cert-close{ position:absolute; top:12px; right:12px; background:rgba(0,0,0,.08); border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px; color:#555; display:flex; align-items:center; justify-content:center; z-index:2; }
-#cert{ padding:34px; font-family:'Inter',sans-serif; background:#fff; }
-.ch{ text-align:center; border-bottom:1px solid #f0f0f0; padding-bottom:20px; margin-bottom:20px; }
-.ch-badge{ width:44px; height:44px; margin:0 auto 10px; background:linear-gradient(135deg,#7C3AED,#4F46E5); border-radius:13px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; }
-.ch-title{ font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#aaa; margin-bottom:6px; }
-.ch-name{ font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:#111; }
-.ch-date{ font-size:12px; color:#aaa; margin-top:4px; }
-.ct-block{ border-radius:10px; padding:18px; margin-bottom:18px; display:flex; align-items:center; gap:14px; }
-.ct-em{ font-size:28px; }
-.ct-label{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
-.ct-name{ font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; }
-.ct-tag{ font-size:12px; font-style:italic; margin-top:2px; color:#666; }
-.cs-title{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#999; margin-bottom:10px; }
-.cb-row{ display:flex; align-items:center; gap:10px; margin-bottom:7px; }
-.cb-lbl{ font-size:11px; font-weight:700; width:14px; flex-shrink:0; }
-.cb-track{ flex:1; height:7px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
-.cb-fill{ height:100%; border-radius:4px; }
-.cb-val{ font-size:11px; font-weight:600; color:#888; width:22px; text-align:right; flex-shrink:0; }
-.cd{ background:#f8f7fd; border-radius:9px; padding:14px; font-size:13px; color:#444; line-height:1.6; margin-bottom:16px; }
-.cf{ border-top:1px solid #f0f0f0; padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-.cf-txt{ font-size:10px; color:#bbb; }
-.cert-foot{ padding:14px 20px 18px; border-top:1px solid #f0f0f0; }
-.cert-hint{ font-size:12px; color:#999; text-align:center; margin-bottom:12px; line-height:1.5; }
-.cert-actions{ display:flex; gap:10px; justify-content:center; }
-.btn-ca{ padding:11px 22px; border-radius:9px; font-size:14px; font-weight:600; cursor:pointer; border:none; font-family:var(--fb); }
-.btn-ca-x{ background:#f0f0f0; color:#333; }
-.btn-ca-x:hover{ background:#e5e5e5; }
-.btn-ca-pdf{ background:linear-gradient(135deg,#7C3AED,#4F46E5); color:#fff; display:flex; align-items:center; gap:7px; }
-.btn-ca-pdf:hover{ opacity:.9; }
-.btn-ca-pdf:disabled{ opacity:.6; cursor:wait; }
+/* ============ CERT MODAL ============ */
+.modal{ position:fixed; inset:0; z-index:100; background:rgba(5,5,8,.8); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center; padding:16px; animation:fin .3s var(--ease); }
+.modal[hidden]{ display:none!important; }
+.modal-box{ width:100%; max-width:500px; max-height:92dvh; overflow-y:auto; border-radius:var(--r-lg); background:var(--bg2); border:1px solid var(--bd2); box-shadow:var(--sh); position:relative; }
+.modal-x{ position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; border:1px solid var(--bd); background:rgba(255,255,255,.04); color:var(--t2); cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:3; font-size:14px; }
+.modal-x:hover{ color:var(--t1); background:rgba(255,255,255,.08); }
+/* certificate — solid dark (no backdrop-filter, html2canvas-safe) */
+#cert{ padding:34px 30px; background:linear-gradient(160deg,#1a1b22 0%,#141319 60%,#0f0f14 100%); border-radius:var(--r-lg); position:relative; overflow:hidden; }
+#cert::before{ content:''; position:absolute; top:-80px; right:-60px; width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle,rgba(159,143,209,.22),transparent 68%); pointer-events:none; }
+.c-top{ text-align:center; position:relative; padding-bottom:20px; border-bottom:1px solid var(--bd); margin-bottom:20px; }
+.c-badge{ width:52px; height:52px; margin:0 auto 12px; border-radius:16px; background:linear-gradient(135deg,#8678b4,#6f63a0); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px rgba(130,116,180,.4); }
+.c-badge svg{ width:26px; height:26px; color:#fff; }
+.c-kicker{ font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--smoke); margin-bottom:8px; }
+.c-name{ font-family:var(--fh); font-weight:700; font-size:25px; color:var(--t1); line-height:1.1; }
+.c-sub{ font-size:12px; color:var(--t2); margin-top:6px; }
+.c-type{ display:flex; align-items:center; gap:15px; padding:16px; border-radius:var(--r-md); margin-bottom:18px; position:relative; }
+.c-type-badge{ width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-family:var(--fh); font-weight:800; font-size:22px; flex-shrink:0; }
+.c-type-k{ font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.c-type-nm{ font-family:var(--fh); font-weight:700; font-size:20px; }
+.c-type-tag{ font-size:12px; font-style:italic; color:var(--t2); margin-top:2px; }
+.c-scores{ margin-bottom:16px; }
+.c-sh{ font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--smoke); margin-bottom:11px; }
+.c-brow{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.c-bk{ font-family:var(--fh); font-weight:700; font-size:11px; width:14px; flex-shrink:0; }
+.c-btr{ flex:1; height:7px; background:rgba(210,204,235,.09); border-radius:4px; overflow:hidden; }
+.c-bf{ height:100%; border-radius:4px; }
+.c-bv{ font-size:11px; font-weight:600; color:var(--t1); width:34px; text-align:right; flex-shrink:0; }
+.c-desc{ font-size:12.5px; color:var(--t2); line-height:1.6; padding:14px; background:rgba(190,180,230,.05); border:1px solid var(--bd); border-radius:var(--r-sm); margin-bottom:16px; }
+.c-foot{ border-top:1px solid var(--bd); padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+.c-foot span{ font-size:10px; color:var(--t3); }
+.modal-foot{ padding:16px 20px 18px; border-top:1px solid var(--bd); }
+.modal-hint{ font-size:12px; color:var(--t2); text-align:center; line-height:1.5; margin-bottom:13px; }
+.modal-acts{ display:flex; gap:10px; }
+.modal-acts .btn{ width:auto; flex:1; padding:12px 18px; font-size:14px; }
+
+/* responsive */
+@media(max-width:860px){
+  .hero{ grid-template-columns:1fr; gap:26px; padding:34px 0 10px; text-align:left; }
+  .hero-visual{ order:-1; }
+  .orb{ width:min(260px,62vw); }
+  .orb-node.n0{ transform:translate(-50%,-50%) translateY(calc(min(130px,31vw) * -1)); }
+  .orb-node.n1{ transform:translate(-50%,-50%) translateX(calc(min(130px,31vw))); }
+  .orb-node.n2{ transform:translate(-50%,-50%) translateY(calc(min(130px,31vw))); }
+  .orb-node.n3{ transform:translate(-50%,-50%) translateX(calc(min(130px,31vw) * -1)); }
+}
+@media(max-width:440px){
+  .r-hero{ grid-template-columns:1fr; text-align:center; gap:16px; justify-items:center; }
+  .pills{ justify-content:center; }
+  .rh-orb{ width:112px; height:112px; }
+}
 </style>
 
-<!-- ── WELCOME ─────────────────────────────────────────────── -->
+<div class="bg-field"></div><div class="bg-vignette"></div><div class="bg-grain"></div>
+
+<!-- ══ WELCOME ══ -->
 <section class="screen active" id="s-welcome">
-  <div class="w-glow"></div>
-  <div class="w-dots"></div>
-  <div class="w-inner">
-    <div class="w-hero">
-      <div class="paei-logo">PAEI</div>
-      <div class="w-sub">Методология Адизеса</div>
-      <p class="w-desc">Пройдите 10 коротких заданий и узнайте свой управленческий стиль по модели Ицхака Адизеса: Производитель, Администратор, Предприниматель или Интегратор.</p>
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="paei-mark"><span>PAEI</span></div>
+        <div class="eyebrow">Методология Ицхака Адизеса</div>
+        <h1 class="hero-h1">Узнайте свой стиль управления</h1>
+        <p class="hero-p">Десять коротких заданий покажут, какую роль вы играете в команде: Производитель, Администратор, Предприниматель или Интегратор. В каждом задании распределите 10 баллов между качествами — так, как чувствуете.</p>
+        <div class="glass form-card">
+          <div class="field">
+            <label for="f-name">Имя</label>
+            <input type="text" id="f-name" placeholder="Александр" autocomplete="given-name" enterkeyhint="next">
+          </div>
+          <div class="field">
+            <label for="f-last">Фамилия</label>
+            <input type="text" id="f-last" placeholder="Петров" autocomplete="family-name" enterkeyhint="go">
+          </div>
+          <button class="btn btn-primary" id="btn-start" disabled>
+            Начать тест
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="hero-meta"><span>10 заданий</span><span class="dot"></span><span>около 5 минут</span><span class="dot"></span><span>сертификат в конце</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="orb">
+          <div class="sphere-glow"></div>
+          <div class="orbit"></div><div class="orbit b"></div>
+          <div class="sphere"></div>
+          <div class="orb-node n0">P</div><div class="orb-node n1">A</div><div class="orb-node n2">E</div><div class="orb-node n3">I</div>
+        </div>
+      </div>
     </div>
-    <div class="form-card">
-      <div class="field">
-        <label for="f-name">Имя</label>
-        <input type="text" id="f-name" placeholder="Александр" autocomplete="given-name" enterkeyhint="next">
+  </div>
+  <div class="sig">сделано <b>Владиславом Рассмехиным</b></div>
+</section>
+
+<!-- ══ TEST ══ -->
+<section class="screen" id="s-test">
+  <div class="wrap">
+    <div class="glass t-head">
+      <div class="t-top">
+        <span class="t-step" id="t-step">Задание 1 из 10</span>
+        <div class="pdots" id="pdots"></div>
       </div>
-      <div class="field">
-        <label for="f-last">Фамилия</label>
-        <input type="text" id="f-last" placeholder="Петров" autocomplete="family-name" enterkeyhint="go">
+      <div class="pbar"><div class="pbar-f" id="pbar" style="width:10%"></div></div>
+      <div class="t-instruct">
+        <p>Распределите <strong>10 баллов</strong> между четырьмя качествами — сколько в каждом из них вас.</p>
+        <div class="ring-wrap">
+          <div class="ring" id="ring"></div>
+          <div class="ring-txt"><span class="ring-num" id="ring-num">0</span><span class="ring-lbl">/ 10</span></div>
+        </div>
       </div>
-      <button class="btn-primary" id="btn-start" disabled>
-        Начать тест
+    </div>
+    <div class="adj-list" id="adj-list"></div>
+    <div class="t-foot">
+      <button class="btn btn-primary" id="btn-next" disabled><span id="btn-next-t">Дальше</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
+      <button class="t-back" id="btn-back" hidden>← Назад</button>
     </div>
-    <p class="w-meta">10 заданий · около 5 минут · имя нужно для сертификата</p>
   </div>
+  <div class="sig">сделано <b>Владиславом Рассмехиным</b></div>
 </section>
 
-<!-- ── TEST ────────────────────────────────────────────────── -->
-<section class="screen" id="s-test">
-  <div class="t-header">
-    <div class="t-nav">
-      <span class="grp-lbl" id="grp-lbl">Задание 1 из 10</span>
-      <div class="pdots" id="pdots"></div>
-    </div>
-    <div class="pbar"><div class="pbar-fill" id="pbar-fill" style="width:10%"></div></div>
-    <p class="t-hint">Поставьте <strong>4</strong> слову, которое точнее всего про вас, и дальше <strong>3, 2, 1</strong> по убыванию. Каждый балл используется один раз.</p>
-  </div>
-  <div class="adj-list" id="adj-list"></div>
-  <div class="t-footer">
-    <button class="btn-primary" id="btn-next" disabled>
-      <span id="btn-next-txt">Дальше</span>
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="btn-back" id="btn-back" hidden>← Назад</button>
-  </div>
-</section>
-
-<!-- ── RESULTS ─────────────────────────────────────────────── -->
+<!-- ══ RESULTS ══ -->
 <section class="screen" id="s-results">
-  <div class="res-head">
-    <span class="res-eyebrow">Результат теста</span>
-    <h1 class="res-name" id="res-name"></h1>
-    <p class="res-date" id="res-date"></p>
+  <div class="wrap">
+    <div class="r-head">
+      <span class="eyebrow">Результат теста</span>
+      <h1 class="r-name" id="r-name"></h1>
+      <p class="r-date" id="r-date"></p>
+    </div>
+    <div class="glass r-hero" id="r-hero">
+      <div class="rh-orb">
+        <div class="sphere-glow" id="rh-glow"></div>
+        <div class="sphere"></div>
+        <div class="rh-val"><span class="rh-letter" id="rh-letter"></span><span class="rh-pct" id="rh-pct"></span></div>
+      </div>
+      <div class="rh-copy">
+        <span class="eyebrow">Ваш ведущий стиль</span>
+        <h2 class="rh-name" id="rh-name"></h2>
+        <p class="rh-tag" id="rh-tag"></p>
+        <p class="rh-insight" id="rh-insight"></p>
+        <div class="pills" id="pills"></div>
+      </div>
+    </div>
+    <div class="tiles" id="tiles"></div>
+    <div class="sec"><div class="sec-h">Профиль PAEI</div><div class="glass panel radar-box" id="radar-box"></div></div>
+    <div class="sec"><div class="sec-h">Распределение в процентах</div><div class="glass panel bars" id="bars"></div></div>
+    <div class="sec"><div class="sec-h">Что значит каждый стиль</div><div class="tcards" id="tcards"></div></div>
+    <div class="r-actions">
+      <button class="btn btn-primary" id="btn-cert">Получить сертификат
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12v2h12v-2M8 1v9M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn-ghost" id="btn-restart">Пройти заново</button>
+    </div>
   </div>
-
-  <div class="type-hero chart-wrap" id="type-hero" style="flex-direction:column;align-items:stretch;gap:10px;padding:26px 24px">
-    <div class="th-glow" id="th-glow"></div>
-    <div class="th-eye">Ваш доминирующий стиль</div>
-    <div class="th-name" id="th-name"></div>
-    <div class="th-tag" id="th-tag"></div>
-    <div class="th-insight" id="th-insight"></div>
-    <div class="th-pills" id="th-pills"></div>
-  </div>
-
-  <div class="scores-grid" id="scores-grid"></div>
-
-  <div style="display:flex;flex-direction:column;gap:10px">
-    <div class="sec-title">Профиль PAEI</div>
-    <div class="chart-wrap"><div class="radar-box" id="radar-box"></div></div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:10px">
-    <div class="sec-title">Баллы по шкалам</div>
-    <div class="chart-wrap"><div class="barchart" id="barchart"></div></div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:10px">
-    <div class="sec-title">Что значит каждый стиль</div>
-    <div class="type-cards" id="type-cards"></div>
-  </div>
-
-  <div class="res-actions">
-    <button class="btn-primary" id="btn-cert">
-      Получить сертификат
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12v2h12v-2M8 1v9M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button class="btn-restart" id="btn-restart">Пройти заново</button>
-  </div>
+  <div class="sig">сделано <b>Владиславом Рассмехиным</b></div>
 </section>
 
-<!-- ── CERT MODAL ──────────────────────────────────────────── -->
-<div class="cert-back" id="cert-modal" hidden>
-  <div class="cert-box">
-    <button class="cert-close" id="cert-x" aria-label="Закрыть">✕</button>
+<!-- ══ CERT MODAL ══ -->
+<div class="modal" id="cert-modal" hidden>
+  <div class="modal-box">
+    <button class="modal-x" id="cert-x" aria-label="Закрыть">✕</button>
     <div id="cert"></div>
-    <div class="cert-foot">
-      <p class="cert-hint" id="cert-hint">Сохраните сертификат: кнопка ниже откроет его в PDF. На телефоне можно просто сделать скриншот.</p>
-      <div class="cert-actions">
-        <button class="btn-ca btn-ca-x" id="cert-x2">Закрыть</button>
-        <button class="btn-ca btn-ca-pdf" id="btn-pdf">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 12v2h12v-2M8 1v9M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span id="pdf-btn-txt">Скачать PDF</span>
-        </button>
+    <div class="modal-foot">
+      <p class="modal-hint" id="cert-hint">Сохраните сертификат: кнопка откроет его в PDF. На телефоне можно сделать скриншот.</p>
+      <div class="modal-acts">
+        <button class="btn btn-ghost" id="cert-x2">Закрыть</button>
+        <button class="btn btn-primary" id="btn-pdf"><span id="pdf-t">Скачать PDF</span></button>
       </div>
     </div>
   </div>
@@ -297,285 +405,203 @@ body{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────────
-const Qs = [
-  { a:[{t:'Вовлечённый',k:'I'},{t:'Отзывчивый',k:'P'},{t:'Яркий',k:'E'},{t:'Сомневающийся',k:'A'}] },
-  { a:[{t:'Абстрактный',k:'E'},{t:'Наблюдающий',k:'A'},{t:'Активный',k:'P'},{t:'Взаимодействующий',k:'I'}] },
-  { a:[{t:'Анализирующий',k:'A'},{t:'Прямой',k:'P'},{t:'Чувствующий',k:'I'},{t:'Харизматичный',k:'E'}] },
-  { a:[{t:'Размышляющий',k:'A'},{t:'Прагматичный',k:'P'},{t:'Душевный, тёплый',k:'I'},{t:'Ориентированный на будущее',k:'E'}] },
-  { a:[{t:'Созерцающий',k:'A'},{t:'Делающий',k:'P'},{t:'Сопереживающий',k:'I'},{t:'Думающий',k:'E'}] },
-  { a:[{t:'Наблюдающий',k:'A'},{t:'Побеждающий',k:'P'},{t:'Стремящийся договориться',k:'I'},{t:'Системный, концептуальный',k:'E'}] },
-  { a:[{t:'Готовый взять ответственность',k:'P'},{t:'Идущий на риск',k:'E'},{t:'Оценивающий',k:'A'},{t:'Благожелательный',k:'I'}] },
-  { a:[{t:'Осведомлённый',k:'A'},{t:'Сдержанный',k:'I'},{t:'Генерирующий идеи',k:'E'},{t:'Рациональный',k:'P'}] },
-  { a:[{t:'Задающий вопросы',k:'I'},{t:'Логичный',k:'A'},{t:'Эффективный',k:'P'},{t:'Интуитивный',k:'E'}] },
-  { a:[{t:'Яркий, выделяющийся',k:'E'},{t:'Приятный',k:'I'},{t:'Деловой, серьёзный',k:'P'},{t:'Аккуратный, точный',k:'A'}] }
+// ── DATA ──
+const Qs=[
+ {a:[{t:'Вовлечённый',k:'I'},{t:'Отзывчивый',k:'P'},{t:'Яркий',k:'E'},{t:'Сомневающийся',k:'A'}]},
+ {a:[{t:'Абстрактный',k:'E'},{t:'Наблюдающий',k:'A'},{t:'Активный',k:'P'},{t:'Взаимодействующий',k:'I'}]},
+ {a:[{t:'Анализирующий',k:'A'},{t:'Прямой',k:'P'},{t:'Чувствующий',k:'I'},{t:'Харизматичный',k:'E'}]},
+ {a:[{t:'Размышляющий',k:'A'},{t:'Прагматичный',k:'P'},{t:'Душевный, тёплый',k:'I'},{t:'Ориентированный на будущее',k:'E'}]},
+ {a:[{t:'Созерцающий',k:'A'},{t:'Делающий',k:'P'},{t:'Сопереживающий',k:'I'},{t:'Думающий',k:'E'}]},
+ {a:[{t:'Наблюдающий',k:'A'},{t:'Побеждающий',k:'P'},{t:'Стремящийся договориться',k:'I'},{t:'Системный, концептуальный',k:'E'}]},
+ {a:[{t:'Готовый взять ответственность',k:'P'},{t:'Идущий на риск',k:'E'},{t:'Оценивающий',k:'A'},{t:'Благожелательный',k:'I'}]},
+ {a:[{t:'Осведомлённый',k:'A'},{t:'Сдержанный',k:'I'},{t:'Генерирующий идеи',k:'E'},{t:'Рациональный',k:'P'}]},
+ {a:[{t:'Задающий вопросы',k:'I'},{t:'Логичный',k:'A'},{t:'Эффективный',k:'P'},{t:'Интуитивный',k:'E'}]},
+ {a:[{t:'Яркий, выделяющийся',k:'E'},{t:'Приятный',k:'I'},{t:'Деловой, серьёзный',k:'P'},{t:'Аккуратный, точный',k:'A'}]}
 ];
-const TI = {
-  P:{ nm:'Производитель', ltr:'P', clr:'#F59E0B', dim:'rgba(245,158,11,.13)', tag:'Результат важнее всего', em:'🎯',
-      desc:'Вы нацелены на результат. Ставите конкретные цели и методично их достигаете. Энергичны, умеете расставлять приоритеты и доводить начатое до конца — на вас держатся сроки. В команде вам доверяют то, что нужно реально сделать.',
-      str:['Высокая работоспособность','Чёткие задачи','Держит сроки'], rsk:['Фокус на «сейчас» в ущерб стратегии','Трудно делегировать'] },
-  A:{ nm:'Администратор', ltr:'A', clr:'#60A5FA', dim:'rgba(96,165,250,.13)', tag:'Порядок рождает эффективность', em:'📐',
-      desc:'Ваша сила — порядок и процессы. Вы внимательны к деталям, последовательны и выстраиваете работу так, чтобы её можно было повторить без потерь. Когда подключаетесь вы, хаос превращается в понятную систему.',
-      str:['Систематизация','Контроль рисков','Надёжные процессы'], rsk:['Сопротивление резким переменам','Избыток формальностей'] },
-  E:{ nm:'Предприниматель', ltr:'E', clr:'#A78BFA', dim:'rgba(167,139,250,.13)', tag:'Будущее важнее настоящего', em:'🚀',
-      desc:'Вы мыслите на перспективу. Генерируете идеи, видите возможности там, где другие видят только риски, и умеете зажечь команду своим видением. Вы двигаете дело вперёд — туда, куда без вас оно бы не пошло.',
-      str:['Видение и стратегия','Идеи и инициатива','Заряжает команду'], rsk:['Непостоянство приоритетов','Скучает над деталями'] },
-  I:{ nm:'Интегратор', ltr:'I', clr:'#34D399', dim:'rgba(52,211,153,.13)', tag:'Люди — главный ресурс', em:'🤝',
-      desc:'Вы собираете людей вместе. Умеете слушать, находить общий язык, гасить конфликты и выстраивать доверие. Там, где другие видят противоречия, вы находите общее. Ваш капитал — атмосфера и сплочённость вокруг вас.',
-      str:['Строит отношения','Решает конфликты','Мотивирует людей'], rsk:['Откладывает жёсткие решения','Зависит от мнения других'] }
+const IC={
+ P:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>',
+ A:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>',
+ E:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21.5h4"/><path d="M12 2.5a6.5 6.5 0 0 0-4 11.6c.7.6 1 1.3 1 2.4h6c0-1.1.3-1.8 1-2.4A6.5 6.5 0 0 0 12 2.5Z"/></svg>',
+ I:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16.5 4.8a3.4 3.4 0 0 1 0 6.4"/><path d="M20.5 20a5.5 5.5 0 0 0-3.4-5.1"/></svg>'
 };
-const MAXV = 40;
+const TI={
+ P:{nm:'Производитель',ltr:'P',clr:'#D9A86B',dim:'rgba(217,168,107,.14)',tag:'Результат важнее всего',
+    desc:'Вы нацелены на результат. Ставите конкретные цели и методично их достигаете. Энергичны, умеете расставлять приоритеты и доводить начатое до конца — на вас держатся сроки. В команде вам доверяют то, что нужно реально сделать.',
+    str:['Высокая работоспособность','Чёткие задачи','Держит сроки'],rsk:['Фокус на «сейчас» в ущерб стратегии','Трудно делегировать']},
+ A:{nm:'Администратор',ltr:'A',clr:'#86A2DE',dim:'rgba(134,162,222,.14)',tag:'Порядок рождает эффективность',
+    desc:'Ваша сила — порядок и процессы. Вы внимательны к деталям, последовательны и выстраиваете работу так, чтобы её можно было повторить без потерь. Когда подключаетесь вы, хаос превращается в понятную систему.',
+    str:['Систематизация','Контроль рисков','Надёжные процессы'],rsk:['Сопротивление резким переменам','Избыток формальностей']},
+ E:{nm:'Предприниматель',ltr:'E',clr:'#C3B5EC',dim:'rgba(195,181,236,.14)',tag:'Будущее важнее настоящего',
+    desc:'Вы мыслите на перспективу. Генерируете идеи, видите возможности там, где другие видят только риски, и умеете зажечь команду своим видением. Вы двигаете дело вперёд — туда, куда без вас оно бы не пошло.',
+    str:['Видение и стратегия','Идеи и инициатива','Заряжает команду'],rsk:['Непостоянство приоритетов','Скучает над деталями']},
+ I:{nm:'Интегратор',ltr:'I',clr:'#83C4AC',dim:'rgba(131,196,172,.14)',tag:'Люди — главный ресурс',
+    desc:'Вы собираете людей вместе. Умеете слушать, находить общий язык, гасить конфликты и выстраивать доверие. Там, где другие видят противоречия, вы находите общее. Ваш капитал — атмосфера и сплочённость вокруг вас.',
+    str:['Строит отношения','Решает конфликты','Мотивирует людей'],rsk:['Откладывает жёсткие решения','Зависит от мнения других']}
+};
+const BUDGET=10, GROUPS=Qs.length, TOTAL=BUDGET*GROUPS; // 100
 
-// ── STATE ──────────────────────────────────────────────────
-let curG = 0;
-let gSc  = Qs.map(() => ({}));
-let uNm = '', uLn = '';
-let fSc = {P:0,A:0,E:0,I:0};
-
-// ── UTILS ──────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-const fmtDate = d => `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} г.`;
+// ── STATE ──
+let curG=0, gSc=Qs.map(()=>[0,0,0,0]), uNm='', uLn='', fSc={P:0,A:0,E:0,I:0};
+const $=id=>document.getElementById(id);
+const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const fmtDate=d=>`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} г.`;
+const sumG=g=>gSc[g].reduce((a,b)=>a+b,0);
+const sorted=()=>Object.entries(fSc).sort((a,b)=>b[1]-a[1]);
 function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); $(id).classList.add('active'); window.scrollTo(0,0); }
-const sortedScores = () => Object.entries(fSc).sort((a,b)=>b[1]-a[1]);
 
-// ── WELCOME ─────────────────────────────────────────────────
-const fName=$('f-name'), fLast=$('f-last'), bStart=$('btn-start');
-function chkStart(){ bStart.disabled = !(fName.value.trim() && fLast.value.trim()); }
-[fName,fLast].forEach(el=>el.addEventListener('input',chkStart));
-fName.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); fLast.focus(); }});
-fLast.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!bStart.disabled){ e.preventDefault(); bStart.click(); }});
-bStart.addEventListener('click',()=>{
-  uNm=fName.value.trim(); uLn=fLast.value.trim();
-  curG=0; gSc=Qs.map(()=>({}));
-  show('s-test'); renderG();
-});
+// ── WELCOME ──
+const fN=$('f-name'), fL=$('f-last'), bS=$('btn-start');
+const chk=()=>bS.disabled=!(fN.value.trim()&&fL.value.trim());
+[fN,fL].forEach(e=>e.addEventListener('input',chk));
+fN.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();fL.focus();}});
+fL.addEventListener('keydown',e=>{if(e.key==='Enter'&&!bS.disabled){e.preventDefault();bS.click();}});
+bS.addEventListener('click',()=>{ uNm=fN.value.trim(); uLn=fL.value.trim(); curG=0; gSc=Qs.map(()=>[0,0,0,0]); show('s-test'); renderG(); });
 
-// ── TEST ────────────────────────────────────────────────────
+// ── TEST ──
 function renderG(){
-  const sc = gSc[curG];
-  $('grp-lbl').textContent = `Задание ${curG+1} из ${Qs.length}`;
-  $('pbar-fill').style.width = `${((curG+1)/Qs.length)*100}%`;
-  $('btn-next-txt').textContent = curG===Qs.length-1 ? 'Показать результат' : 'Дальше';
-  $('btn-back').hidden = curG===0;
-
+  const vals=gSc[curG], used=sumG(curG), rem=BUDGET-used;
+  $('t-step').textContent=`Задание ${curG+1} из ${GROUPS}`;
+  $('pbar').style.width=`${((curG+1)/GROUPS)*100}%`;
+  $('btn-next-t').textContent=curG===GROUPS-1?'Показать результат':'Дальше';
+  $('btn-back').hidden=curG===0;
   const pd=$('pdots'); pd.innerHTML='';
-  for(let i=0;i<Qs.length;i++){ const d=document.createElement('div'); d.className='pdot'+(i<curG?' done':i===curG?' cur':''); pd.appendChild(d); }
-
+  for(let i=0;i<GROUPS;i++){ const d=document.createElement('div'); d.className='pdot'+(i<curG?' done':i===curG?' cur':''); pd.appendChild(d); }
+  // ring
+  $('ring').style.setProperty('--pct', used*10);
+  const rn=$('ring-num'); rn.textContent=used; rn.classList.toggle('full',used===BUDGET);
+  // rows
   const list=$('adj-list'); list.innerHTML='';
-  const used=Object.values(sc);
   Qs[curG].a.forEach((adj,ai)=>{
-    const card=document.createElement('div'); card.className='adj-card'+(sc[ai]?' sel':'');
-    const txt=document.createElement('span'); txt.className='adj-txt'; txt.textContent=adj.t;
-    const btns=document.createElement('div'); btns.className='sc-btns';
-    [4,3,2,1].forEach(v=>{
-      const b=document.createElement('button'); b.className='sc-btn'+(sc[ai]===v?' on':''); b.textContent=v;
-      b.setAttribute('aria-label',`${adj.t}: ${v} ${v===4?'балла (точнее всего)':'балла'}`);
-      if(used.includes(v)&&sc[ai]!==v) b.disabled=true;
-      b.addEventListener('click',()=>{
-        for(const k in gSc[curG]) if(gSc[curG][k]===v) delete gSc[curG][k];
-        if(sc[ai]===v) delete gSc[curG][ai]; else gSc[curG][ai]=v;
-        renderG();
-      });
-      btns.appendChild(b);
-    });
-    card.appendChild(txt); card.appendChild(btns); list.appendChild(card);
+    const v=vals[ai];
+    const row=document.createElement('div'); row.className='adj-row'+(v>0?' active':'');
+    row.innerHTML=`<span class="adj-name">${adj.t}</span>
+      <div class="stepper">
+        <button class="step" data-op="dec" aria-label="Убавить балл у «${adj.t}»" ${v===0?'disabled':''}>−</button>
+        <span class="step-val${v>0?' on':''}">${v}</span>
+        <button class="step" data-op="inc" aria-label="Добавить балл «${adj.t}»" ${rem===0?'disabled':''}>+</button>
+      </div>`;
+    row.querySelector('[data-op="dec"]').addEventListener('click',()=>{ if(gSc[curG][ai]>0){ gSc[curG][ai]--; renderG(); }});
+    row.querySelector('[data-op="inc"]').addEventListener('click',()=>{ if(sumG(curG)<BUDGET){ gSc[curG][ai]++; renderG(); }});
+    list.appendChild(row);
   });
-  $('btn-next').disabled = Object.keys(gSc[curG]).length!==4;
+  $('btn-next').disabled=used!==BUDGET;
 }
-$('btn-next').addEventListener('click',()=>{
-  if(curG<Qs.length-1){ curG++; renderG(); window.scrollTo(0,0); }
-  else finish();
-});
-$('btn-back').addEventListener('click',()=>{ if(curG>0){ curG--; renderG(); window.scrollTo(0,0); } });
+$('btn-next').addEventListener('click',()=>{ if(curG<GROUPS-1){ curG++; renderG(); window.scrollTo(0,0);} else finish(); });
+$('btn-back').addEventListener('click',()=>{ if(curG>0){ curG--; renderG(); window.scrollTo(0,0);} });
 
-// ── FINISH / SCORING ────────────────────────────────────────
+// ── FINISH ──
 function finish(){
   fSc={P:0,A:0,E:0,I:0};
-  Qs.forEach((q,gi)=>q.a.forEach((adj,ai)=>{ fSc[adj.k]+=gSc[gi][ai]||0; }));
-  show('s-results');                 // show FIRST, so nothing depends on a hidden layout
+  Qs.forEach((q,gi)=>q.a.forEach((adj,ai)=>{ fSc[adj.k]+=gSc[gi][ai]; }));
+  show('s-results');
   requestAnimationFrame(()=>{ try{ renderResults(); }catch(e){ console.error(e); } });
 }
 
-// ── RADAR (pure SVG, no library) ────────────────────────────
-function buildRadar(){
-  const cx=150, cy=150, R=100;
-  const dir={ P:[0,-1], A:[1,0], E:[0,1], I:[-1,0] };
-  const P=(k,f)=>[ (cx+dir[k][0]*R*f).toFixed(1), (cy+dir[k][1]*R*f).toFixed(1) ];
-  const order=['P','A','E','I'];
-  const ring=f=>order.map(k=>P(k,f).join(',')).join(' ');
-  let grid='';
-  [0.25,0.5,0.75,1].forEach(f=>{ grid+=`<polygon points="${ring(f)}" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1"/>`; });
-  let axes='';
-  order.forEach(k=>{ const p=P(k,1); axes+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="rgba(255,255,255,.09)" stroke-width="1"/>`; });
-  const dataPts=order.map(k=>P(k,(fSc[k]||0)/MAXV).join(',')).join(' ');
-  let dots='';
-  order.forEach(k=>{ const p=P(k,(fSc[k]||0)/MAXV); dots+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="${TI[k].clr}" stroke="#07070e" stroke-width="1.5"/>`; });
-  const lbl=[ ['P',150,30],['A',278,154],['E',150,286],['I',22,154] ];
-  let labels='';
-  lbl.forEach(([k,x,y])=>{ labels+=`<text x="${x}" y="${y}" fill="${TI[k].clr}" font-family="'Space Grotesk',sans-serif" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="middle">${k}</text>`; });
-  return `<svg viewBox="0 0 300 300" role="img" aria-label="Радарная диаграмма PAEI">
-    <g>${grid}${axes}</g>
-    <g class="radar-data" id="radar-data">
-      <polygon points="${dataPts}" fill="rgba(124,58,237,.22)" stroke="#8B5CF6" stroke-width="2" stroke-linejoin="round"/>
-      ${dots}
-    </g>
-    ${labels}
-  </svg>`;
+// ── RADAR (SVG) ──
+function buildRadar(axMax){
+  const cx=150,cy=150,R=100,ks=['P','A','E','I'],dir={P:[0,-1],A:[1,0],E:[0,1],I:[-1,0]};
+  const P=(k,f)=>[(cx+dir[k][0]*R*f).toFixed(1),(cy+dir[k][1]*R*f).toFixed(1)];
+  const ring=f=>ks.map(k=>P(k,f).join(',')).join(' ');
+  let g=''; [0.25,0.5,0.75,1].forEach(f=>g+=`<polygon points="${ring(f)}" fill="none" stroke="rgba(210,204,235,.1)" stroke-width="1"/>`);
+  let ax=''; ks.forEach(k=>{const p=P(k,1); ax+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="rgba(210,204,235,.1)" stroke-width="1"/>`;});
+  const dp=ks.map(k=>P(k,Math.min(1,(fSc[k]||0)/axMax)).join(',')).join(' ');
+  let dots=''; ks.forEach(k=>{const p=P(k,Math.min(1,(fSc[k]||0)/axMax)); dots+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="${TI[k].clr}" stroke="#15161d" stroke-width="1.5"/>`;});
+  const lb=[['P',150,28],['A',281,154],['E',150,288],['I',19,154]]; let L='';
+  lb.forEach(([k,x,y])=>L+=`<text x="${x}" y="${y}" fill="${TI[k].clr}" font-family="Manrope,sans-serif" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="middle">${k}</text>`);
+  return `<svg viewBox="0 0 300 300" role="img" aria-label="Радарная диаграмма PAEI"><g>${g}${ax}</g>
+    <g class="radar-data" id="radar-data"><polygon points="${dp}" fill="rgba(190,180,230,.2)" stroke="#BEB4E6" stroke-width="2" stroke-linejoin="round"/>${dots}</g>${L}</svg>`;
 }
+function insight(s){ const a=s[0][0],b=s[1][0],gap=s[0][1]-s[1][1];
+  if(gap<=4) return `У вас сильная связка ${TI[a].nm} + ${TI[b].nm}: два стиля работают почти на равных.`;
+  if(gap>=20) return `${TI[a].nm} выражен заметно сильнее остальных — это ваш опорный стиль.`;
+  return `Ведущий стиль — ${TI[a].nm}, а поддерживает его ${TI[b].nm}.`; }
 
-// ── RESULTS ─────────────────────────────────────────────────
-function insightLine(sorted){
-  const a=sorted[0][0], b=sorted[1][0], gap=sorted[0][1]-sorted[1][1];
-  if(gap<=2) return `У вас сильная связка ${TI[a].nm} + ${TI[b].nm}: два стиля работают почти на равных.`;
-  if(gap>=12) return `${TI[a].nm} выражен заметно сильнее остальных — это ваш опорный стиль.`;
-  return `Ведущий стиль — ${TI[a].nm}, а поддерживает его ${TI[b].nm}.`;
-}
+// ── RESULTS ──
 function renderResults(){
-  const full=`${uNm} ${uLn}`;
-  $('res-name').textContent=full;
-  $('res-date').textContent=fmtDate(new Date());
-  const sorted=sortedScores();
-  const dom=sorted[0][0], ti=TI[dom];
-
-  const hero=$('type-hero');
-  hero.style.background=`linear-gradient(135deg,${ti.dim} 0%,rgba(13,13,26,.5) 100%)`;
-  hero.style.borderColor=`${ti.clr}40`;
-  $('th-glow').style.background=ti.clr;
-  $('th-name').textContent=`${ti.em}  ${ti.nm}`;
-  $('th-name').style.color=ti.clr;
-  $('th-tag').textContent=`«${ti.tag}»`;
-  $('th-insight').textContent=insightLine(sorted);
-
-  const pills=$('th-pills'); pills.innerHTML='';
-  ['P','A','E','I'].forEach(k=>{ const p=document.createElement('span'); p.className='th-pill';
-    p.style.cssText=`color:${TI[k].clr};border-color:${TI[k].clr}40;background:${TI[k].dim}`;
-    p.textContent=`${k} ${fSc[k]}`; pills.appendChild(p); });
-
-  const grid=$('scores-grid'); grid.innerHTML='';
-  ['P','A','E','I'].forEach(k=>{ const d=document.createElement('div'); d.className='stile'+(k===dom?' dom':'');
-    d.style.setProperty('--tc',TI[k].clr);
-    d.innerHTML=`<div class="st-lbl">${k}</div><div class="st-num">${fSc[k]}</div><div class="st-name">${TI[k].nm}</div>`;
-    grid.appendChild(d); });
-
-  // radar (SVG) + animate
-  const rb=$('radar-box'); rb.innerHTML=buildRadar();
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{ const g=$('radar-data'); if(g) g.classList.add('in'); }));
-
+  $('r-name').textContent=`${uNm} ${uLn}`;
+  $('r-date').textContent=fmtDate(new Date());
+  const s=sorted(), dom=s[0][0], ti=TI[dom];
+  const hero=$('r-hero'); hero.style.background=`linear-gradient(145deg,${ti.dim},rgba(26,27,34,.8))`; hero.style.borderColor=`color-mix(in srgb,${ti.clr} 34%,transparent)`;
+  $('rh-glow').style.background=`radial-gradient(circle,${ti.clr}55 0%,transparent 70%)`;
+  $('rh-letter').textContent=ti.ltr; $('rh-letter').style.color=ti.clr;
+  $('rh-pct').textContent=`${fSc[dom]}%`;
+  $('rh-name').textContent=ti.nm; $('rh-name').style.color=ti.clr;
+  $('rh-tag').textContent=`«${ti.tag}»`;
+  $('rh-insight').textContent=insight(s);
+  const pl=$('pills'); pl.innerHTML='';
+  ['P','A','E','I'].forEach(k=>{const p=document.createElement('span'); p.className='pill'; p.style.cssText=`color:${TI[k].clr};border-color:color-mix(in srgb,${TI[k].clr} 40%,transparent);background:${TI[k].dim}`; p.textContent=`${k} ${fSc[k]}%`; pl.appendChild(p);});
+  // tiles
+  const tl=$('tiles'); tl.innerHTML='';
+  ['P','A','E','I'].forEach(k=>{const x=TI[k]; const d=document.createElement('div'); d.className='tile'+(k===dom?' dom':''); d.style.setProperty('--tc',x.clr); d.style.setProperty('--tc-d',x.dim);
+    d.innerHTML=`<span class="tile-lbl">${k}</span><div class="tile-badge">${IC[k]}</div><div class="tile-num">${fSc[k]}<small>%</small></div><div class="tile-name">${x.nm}</div>`; tl.appendChild(d);});
+  // radar
+  const axMax=Math.max(40,Math.ceil(Math.max(...Object.values(fSc))/10)*10);
+  $('radar-box').innerHTML=buildRadar(axMax);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const g=$('radar-data'); if(g)g.classList.add('in');}));
   // bars
-  const bc=$('barchart'); bc.innerHTML='';
-  ['P','A','E','I'].forEach(k=>{ const row=document.createElement('div'); row.className='bar-row';
-    row.innerHTML=`<span class="bar-lbl" style="color:${TI[k].clr}">${k}</span>
-      <div class="bar-track"><div class="bar-fill" style="background:${TI[k].clr}"></div></div>
-      <span class="bar-val">${fSc[k]}</span>`;
-    bc.appendChild(row);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{ row.querySelector('.bar-fill').style.width=`${(fSc[k]/MAXV)*100}%`; }));
-  });
-
-  // type cards (dominant first)
-  const cards=$('type-cards'); cards.innerHTML='';
-  const ord=['P','A','E','I'].sort((a,b)=> a===dom?-1 : b===dom?1 : fSc[b]-fSc[a]);
-  ord.forEach(k=>{ const x=TI[k]; const card=document.createElement('div'); card.className='tc'+(k===dom?' open':'');
-    card.innerHTML=`
-      <button class="tc-head" aria-expanded="${k===dom}">
-        <span class="tc-ico" style="background:${x.dim}">${x.em}</span>
-        <span class="tc-info">
-          <span class="tc-name" style="color:${x.clr};display:block">${x.nm}</span>
-          <span class="tc-sub">${x.ltr} · ${fSc[k]} ${plural(fSc[k])}${k===dom?' · ваш стиль':''}</span>
-        </span>
-        <span class="tc-chev">▾</span>
-      </button>
-      <div class="tc-body">
-        <p class="tc-desc">${x.desc}</p>
-        <div class="sec-mini">Сильные стороны</div>
-        <div class="tag-row" style="margin-bottom:12px">${x.str.map(s=>`<span class="tag" style="background:${x.dim};color:${x.clr}">${s}</span>`).join('')}</div>
-        <div class="sec-mini">На что обратить внимание</div>
-        <div class="tag-row">${x.rsk.map(r=>`<span class="tag" style="background:rgba(100,116,139,.14);color:var(--t3)">${r}</span>`).join('')}</div>
-      </div>`;
-    const head=card.querySelector('.tc-head');
-    head.addEventListener('click',()=>{ const o=card.classList.toggle('open'); head.setAttribute('aria-expanded',o); });
-    cards.appendChild(card);
-  });
+  const bc=$('bars'); bc.innerHTML='';
+  ['P','A','E','I'].forEach(k=>{const x=TI[k]; const r=document.createElement('div'); r.className='bar'; r.style.setProperty('--tc',x.clr);
+    r.innerHTML=`<span class="bar-k">${k}</span><div class="bar-tr"><div class="bar-f"></div></div><span class="bar-v">${fSc[k]}<small>%</small></span>`;
+    bc.appendChild(r); requestAnimationFrame(()=>requestAnimationFrame(()=>{ r.querySelector('.bar-f').style.width=`${Math.min(100,(fSc[k]/axMax)*100)}%`; }));});
+  // cards
+  const cc=$('tcards'); cc.innerHTML='';
+  const ord=['P','A','E','I'].sort((a,b)=>a===dom?-1:b===dom?1:fSc[b]-fSc[a]);
+  ord.forEach(k=>{const x=TI[k]; const c=document.createElement('div'); c.className='tc'+(k===dom?' open':''); c.style.setProperty('--tc',x.clr); c.style.setProperty('--tc-d',x.dim);
+    c.innerHTML=`<button class="tc-head" aria-expanded="${k===dom}"><span class="tc-ic">${IC[k]}</span>
+        <span class="tc-meta"><span class="tc-nm" style="color:${x.clr};display:block">${x.nm}</span><span class="tc-sub">${x.ltr} · ${fSc[k]}%${k===dom?' · ваш стиль':''}</span></span><span class="tc-ch">▾</span></button>
+      <div class="tc-body"><div class="tc-inner"><p class="tc-desc">${x.desc}</p>
+        <div class="mini-h">Сильные стороны</div><div class="chips" style="margin-bottom:12px">${x.str.map(t=>`<span class="chip" style="background:${x.dim};color:${x.clr}">${t}</span>`).join('')}</div>
+        <div class="mini-h">На что обратить внимание</div><div class="chips">${x.rsk.map(t=>`<span class="chip" style="background:rgba(210,204,235,.07);color:var(--t2)">${t}</span>`).join('')}</div></div></div>`;
+    const h=c.querySelector('.tc-head'); h.addEventListener('click',()=>{const o=c.classList.toggle('open'); h.setAttribute('aria-expanded',o);}); cc.appendChild(c);});
 }
-function plural(n){ const d=n%10,dd=n%100; if(d===1&&dd!==11) return 'балл'; if(d>=2&&d<=4&&(dd<10||dd>=20)) return 'балла'; return 'баллов'; }
+$('btn-restart').addEventListener('click',()=>{ fN.value=''; fL.value=''; bS.disabled=true; show('s-welcome'); });
 
-$('btn-restart').addEventListener('click',()=>{ fName.value=''; fLast.value=''; bStart.disabled=true; show('s-welcome'); });
-
-// ── CERTIFICATE ─────────────────────────────────────────────
+// ── CERTIFICATE ──
 $('btn-cert').addEventListener('click',openCert);
 [$('cert-x'),$('cert-x2')].forEach(b=>b.addEventListener('click',()=>$('cert-modal').hidden=true));
 $('cert-modal').addEventListener('click',e=>{ if(e.target===$('cert-modal')) $('cert-modal').hidden=true; });
-
 function openCert(){
-  const sorted=sortedScores(); const dom=sorted[0][0], ti=TI[dom];
-  const full=`${uNm} ${uLn}`, dt=fmtDate(new Date());
+  const s=sorted(), dom=s[0][0], ti=TI[dom], full=`${uNm} ${uLn}`, dt=fmtDate(new Date());
   $('cert').innerHTML=`
-    <div class="ch">
-      <div class="ch-badge">🏅</div>
-      <div class="ch-title">Сертификат о прохождении</div>
-      <div class="ch-name">${full}</div>
-      <div class="ch-date">прошёл(а) тест Адизеса PAEI · ${dt}</div>
+    <div class="c-top">
+      <div class="c-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 22l5-2.5L17 22l-1.5-8.5"/></svg></div>
+      <div class="c-kicker">Сертификат о прохождении</div>
+      <div class="c-name">${full}</div>
+      <div class="c-sub">прошёл(а) тест Адизеса PAEI · ${dt}</div>
     </div>
-    <div class="ct-block" style="background:${ti.dim}">
-      <span class="ct-em">${ti.em}</span>
-      <div>
-        <div class="ct-label" style="color:${ti.clr}">Доминирующий стиль</div>
-        <div class="ct-name" style="color:${ti.clr}">${ti.nm}</div>
-        <div class="ct-tag">«${ti.tag}»</div>
-      </div>
+    <div class="c-type" style="background:${ti.dim}">
+      <div class="c-type-badge" style="background:${ti.clr};color:#15141c">${ti.ltr}</div>
+      <div><div class="c-type-k" style="color:${ti.clr}">Ведущий стиль</div><div class="c-type-nm" style="color:${ti.clr}">${ti.nm}</div><div class="c-type-tag">«${ti.tag}»</div></div>
     </div>
-    <div style="margin-bottom:16px">
-      <div class="cs-title">Результаты по шкалам</div>
-      ${['P','A','E','I'].map(k=>`<div class="cb-row">
-        <span class="cb-lbl" style="color:${TI[k].clr}">${k}</span>
-        <div class="cb-track"><div class="cb-fill" style="background:${TI[k].clr};width:${(fSc[k]/MAXV)*100}%"></div></div>
-        <span class="cb-val">${fSc[k]}</span></div>`).join('')}
+    <div class="c-scores"><div class="c-sh">Распределение в процентах</div>
+      ${['P','A','E','I'].map(k=>`<div class="c-brow"><span class="c-bk" style="color:${TI[k].clr}">${k}</span><div class="c-btr"><div class="c-bf" style="background:${TI[k].clr};width:${fSc[k]}%"></div></div><span class="c-bv">${fSc[k]}%</span></div>`).join('')}
     </div>
-    <div class="cd">${ti.desc}</div>
-    <div class="cf"><span class="cf-txt">Методология Ицхака Адизеса · PAEI</span><span class="cf-txt">${dt}</span></div>`;
-  $('cert-hint').textContent='Сохраните сертификат: кнопка ниже откроет его в PDF. На телефоне проще всего сделать скриншот.';
+    <div class="c-desc">${ti.desc}</div>
+    <div class="c-foot"><span>Методология Ицхака Адизеса · PAEI</span><span>сделано Владиславом Рассмехиным</span></div>`;
+  $('cert-hint').textContent='Сохраните сертификат: кнопка откроет его в PDF. На телефоне проще всего сделать скриншот.';
   $('cert-modal').hidden=false;
 }
-
-// ── PDF (html2canvas → image → jsPDF; Cyrillic-safe) ─────────
-$('btn-pdf').addEventListener('click',async ()=>{
-  const btn=$('btn-pdf'), txt=$('pdf-btn-txt'), hint=$('cert-hint');
-  if(!window.html2canvas || !window.jspdf){
-    hint.textContent='Не удалось загрузить модуль PDF. Сделайте скриншот сертификата — он так же подтверждает прохождение.';
-    return;
-  }
+// ── PDF (html2canvas → image → jsPDF; Cyrillic-safe) ──
+$('btn-pdf').addEventListener('click',async()=>{
+  const btn=$('btn-pdf'), txt=$('pdf-t'), hint=$('cert-hint');
+  if(!window.html2canvas||!window.jspdf){ hint.textContent='Не удалось загрузить модуль PDF. Сделайте скриншот сертификата — он так же подтверждает прохождение.'; return; }
   btn.disabled=true; txt.textContent='Готовим…';
   try{
-    const cert=$('cert');
-    const canvas=await html2canvas(cert,{ backgroundColor:'#ffffff', scale:2, useCORS:true, logging:false });
+    const canvas=await html2canvas($('cert'),{backgroundColor:'#141319',scale:2,useCORS:true,logging:false});
     const img=canvas.toDataURL('image/png');
-    const { jsPDF }=window.jspdf;
-    const pdf=new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
+    const {jsPDF}=window.jspdf, pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
     const pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight(), m=28;
-    let w=pw-m*2, h=w*canvas.height/canvas.width;
-    if(h>ph-m*2){ h=ph-m*2; w=h*canvas.width/canvas.height; }
+    let w=pw-m*2, h=w*canvas.height/canvas.width; if(h>ph-m*2){ h=ph-m*2; w=h*canvas.width/canvas.height; }
+    pdf.setFillColor(16,17,21); pdf.rect(0,0,pw,ph,'F');
     pdf.addImage(img,'PNG',(pw-w)/2,m,w,h);
-    const url=URL.createObjectURL(pdf.output('blob'));
-    const win=window.open(url,'_blank');
-    if(!win){
-      // fallback: show PDF in a full-screen in-page viewer
-      const ov=document.createElement('div');
-      ov.style.cssText='position:fixed;inset:0;z-index:300;background:#1a1a2e;display:flex;flex-direction:column;';
-      ov.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;color:#fff;font-family:var(--fb);font-size:14px">
-        <span>Сертификат PDF</span><button id="ov-x" style="background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer">Закрыть</button></div>
-        <iframe src="${url}" style="flex:1;border:none;background:#fff"></iframe>`;
-      document.body.appendChild(ov);
-      ov.querySelector('#ov-x').onclick=()=>{ document.body.removeChild(ov); URL.revokeObjectURL(url); };
-      hint.textContent='Если PDF не открылся — сделайте скриншот сертификата.';
-    }
-  }catch(e){
-    console.error(e);
-    hint.textContent='Не получилось собрать PDF. Сделайте скриншот сертификата — он подтверждает прохождение теста.';
-  }finally{
-    btn.disabled=false; txt.textContent='Скачать PDF';
-  }
+    const url=URL.createObjectURL(pdf.output('blob')), win=window.open(url,'_blank');
+    if(!win){ const ov=document.createElement('div'); ov.style.cssText='position:fixed;inset:0;z-index:300;background:#101115;display:flex;flex-direction:column';
+      ov.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;color:#D8D7E0;font-family:Manrope,sans-serif;font-size:14px"><span>Сертификат PDF</span><button id="ovx" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer">Закрыть</button></div><iframe src="${url}" style="flex:1;border:none;background:#fff"></iframe>`;
+      document.body.appendChild(ov); ov.querySelector('#ovx').onclick=()=>{ document.body.removeChild(ov); URL.revokeObjectURL(url); };
+      hint.textContent='Если PDF не открылся — сделайте скриншот сертификата.'; }
+  }catch(e){ console.error(e); hint.textContent='Не получилось собрать PDF. Сделайте скриншот сертификата — он подтверждает прохождение.'; }
+  finally{ btn.disabled=false; txt.textContent='Скачать PDF'; }
 });
 
-// pre-render first group
 renderG();
 </script>
