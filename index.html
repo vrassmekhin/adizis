@@ -116,7 +116,11 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fh);font-size:16px;l
 .rk:hover:not(:disabled){background:rgba(124,92,255,.14);color:var(--violet2);border-color:rgba(124,92,255,.45)}
 .rk.on{background:linear-gradient(135deg,var(--violet),var(--violet-deep));border-color:transparent;color:#fff;box-shadow:0 3px 13px rgba(124,92,255,.55);transform:scale(1.07)}
 .rk:disabled{opacity:.22;cursor:not-allowed}
-.t-foot{display:flex;flex-direction:column;gap:9px;padding:16px 0 4px}
+.sum-hint{text-align:center;font-size:13px;font-weight:600;padding-top:12px;color:var(--t3)}
+.sum-hint:empty{padding:0}
+.sum-hint.warn{color:#E3AC68}
+.sum-hint.ok{color:#5FD3A8}
+.t-foot{display:flex;flex-direction:column;gap:9px;padding:14px 0 4px}
 .t-back{background:none;border:none;color:var(--t3);font-size:14px;cursor:pointer;padding:9px;align-self:center;transition:color .2s}
 .t-back:hover{color:var(--t1)}
 .t-back[hidden]{display:none}
@@ -264,7 +268,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fh);font-size:16px;l
         <div class="h-mark">PAEI</div>
         <div class="eyebrow">Методология Ицхака Адизеса</div>
         <h1 class="h-h1">Какой вы руководитель на&nbsp;самом деле</h1>
-        <p class="h-p">Четыре стиля живут в каждом из нас, но один ведёт. Пройдите тест из 10 заданий и узнайте свой код PAEI.</p>
+        <p class="h-p">В каждом есть все четыре стиля, но какой-то один обычно ведёт. Пройдите 10 заданий и узнайте, какой ведёт у вас.</p>
         <div class="glass h-form">
           <div class="field"><label for="f-name">Имя</label><input id="f-name" placeholder="Александр" autocomplete="given-name" enterkeyhint="next"></div>
           <div class="field"><label for="f-last">Фамилия</label><input id="f-last" placeholder="Петров" autocomplete="family-name" enterkeyhint="go"></div>
@@ -286,11 +290,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fh);font-size:16px;l
       <div class="t-top"><span class="t-step" id="t-step">Задание 1 из 10</span><div class="pdots" id="pdots"></div></div>
       <div class="pbar"><div class="pbar-f" id="pbar" style="width:10%"></div></div>
       <div class="t-instr">
-        <p>Поставьте <strong>4</strong> тому, что точнее всего про вас, затем <strong>3, 2, 1</strong> по убыванию. Каждую оценку — один раз.</p>
+        <p>Оцените каждое качество от <strong>1 до 4</strong> — насколько оно про вас. Оценки можно повторять, но вместе они должны дать <strong>10</strong>.</p>
         <div class="ring-wrap"><div class="ring" id="ring"></div><div class="ring-txt"><span class="ring-n" id="ring-n">0</span><span class="ring-l">/ 10</span></div></div>
       </div>
     </div>
     <div class="adj-list" id="adj-list"></div>
+    <p class="sum-hint" id="sum-hint"></p>
     <div class="t-foot">
       <button class="btn btn-primary" id="btn-next" disabled><span id="btn-next-t">Дальше</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -370,18 +375,18 @@ const IC={
  I:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16.5 4.8a3.4 3.4 0 0 1 0 6.4"/><path d="M20.5 20a5.5 5.5 0 0 0-3.4-5.1"/></svg>'
 };
 const TI={
- P:{nm:'Производитель',ltr:'P',clr:'#E3AC68',dim:'rgba(227,172,104,.13)',tag:'Результат важнее всего',ess:'Делает результат',
-    desc:'Вы нацелены на результат. Ставите конкретные цели и методично их достигаете. Энергичны, умеете расставлять приоритеты и доводить начатое до конца — на вас держатся сроки. В команде вам доверяют то, что нужно реально сделать.',
-    str:['Работоспособность','Чёткие задачи','Держит сроки'],rsk:['Фокус на «сейчас»','Трудно делегировать']},
- A:{nm:'Администратор',ltr:'A',clr:'#6E97F0',dim:'rgba(110,151,240,.14)',tag:'Порядок рождает эффективность',ess:'Наводит порядок',
-    desc:'Ваша сила — порядок и процессы. Вы внимательны к деталям, последовательны и выстраиваете работу так, чтобы её можно было повторить без потерь. Когда подключаетесь вы, хаос превращается в понятную систему.',
-    str:['Систематизация','Контроль рисков','Надёжные процессы'],rsk:['Сопротивление переменам','Избыток формальностей']},
- E:{nm:'Предприниматель',ltr:'E',clr:'#A98BFF',dim:'rgba(169,139,255,.15)',tag:'Будущее важнее настоящего',ess:'Создаёт идеи',
-    desc:'Вы мыслите на перспективу. Генерируете идеи, видите возможности там, где другие видят только риски, и умеете зажечь команду своим видением. Вы двигаете дело вперёд — туда, куда без вас оно бы не пошло.',
-    str:['Видение','Инициатива','Заряжает команду'],rsk:['Непостоянство','Скучает над деталями']},
- I:{nm:'Интегратор',ltr:'I',clr:'#5FD3A8',dim:'rgba(95,211,168,.14)',tag:'Люди — главный ресурс',ess:'Объединяет людей',
-    desc:'Вы собираете людей вместе. Умеете слушать, находить общий язык, гасить конфликты и выстраивать доверие. Там, где другие видят противоречия, вы находите общее. Ваш капитал — атмосфера и сплочённость вокруг вас.',
-    str:['Строит отношения','Решает конфликты','Мотивирует'],rsk:['Откладывает решения','Зависит от мнения']}
+ P:{nm:'Производитель',ltr:'P',clr:'#E3AC68',dim:'rgba(227,172,104,.13)',tag:'Главное — чтобы было сделано',ess:'Доводит до дела',
+    desc:'Вам важно, чтобы дело было сделано. Вы ставите цель и идёте к ней, не отвлекаясь на лишнее. Понимаете, что сейчас главное, и доводите начатое до конца. Если надо уложиться в срок — это к вам.',
+    str:['Много успевает','Видит, что важно','Не срывает сроки'],rsk:['Живёт сегодняшним днём','Всё тянет на себе']},
+ A:{nm:'Администратор',ltr:'A',clr:'#6E97F0',dim:'rgba(110,151,240,.14)',tag:'Любит, когда всё по полочкам',ess:'Наводит порядок',
+    desc:'Вы любите, когда всё на своих местах. Замечаете детали, которые другие упускают, и выстраиваете работу так, чтобы её можно было повторить без сбоев. После вас на месте беспорядка появляется понятная система.',
+    str:['Любит порядок','Видит риски заранее','На него можно положиться'],rsk:['Тяжело принимает перемены','Иногда слишком строг к правилам']},
+ E:{nm:'Предприниматель',ltr:'E',clr:'#A98BFF',dim:'rgba(169,139,255,.15)',tag:'Всегда смотрит вперёд',ess:'Придумывает новое',
+    desc:'Вы смотрите дальше, чем на завтра. Идеи приходят к вам легко, и там, где другие видят только риск, вы видите шанс. Умеете увлечь людей и сдвинуть дело с места, когда оно застопорилось.',
+    str:['Полон идей','Берётся первым','Заражает азартом'],rsk:['Быстро меняет курс','Скучает на деталях']},
+ I:{nm:'Интегратор',ltr:'I',clr:'#5FD3A8',dim:'rgba(95,211,168,.14)',tag:'Всё держится на людях',ess:'Объединяет людей',
+    desc:'Рядом с вами людям легко договориться. Вы умеете слушать, сглаживать острые углы и возвращать доверие, когда оно пошатнулось. В споре ищете то, что сближает. Команда рядом с вами держится вместе.',
+    str:['Сближает людей','Гасит конфликты','Поддерживает'],rsk:['Тянет с трудными решениями','Оглядывается на других']}
 };
 const MAXV=40;
 
@@ -415,24 +420,25 @@ function renderG(){
   $('btn-back').hidden=curG===0;
   const pd=$('pdots');pd.innerHTML='';
   for(let i=0;i<Qs.length;i++){const d=document.createElement('div');d.className='pdot'+(i<curG?' done':i===curG?' cur':'');pd.appendChild(d);}
-  $('ring').style.setProperty('--pct',used*10);
+  $('ring').style.setProperty('--pct',Math.min(100,used*10));
   const rn=$('ring-n');rn.textContent=used;rn.classList.toggle('full',used===10);
   const list=$('adj-list');list.innerHTML='';
-  const taken=Object.values(sc);
   Qs[curG].a.forEach((adj,ai)=>{
     const v=sc[ai];
     const row=document.createElement('div');row.className='adj'+(v?' set':'');
     const nm=document.createElement('span');nm.className='adj-n';nm.textContent=adj.t;
     const rks=document.createElement('div');rks.className='rks';
-    [4,3,2,1].forEach(n=>{const b=document.createElement('button');b.className='rk'+(v===n?' on':'');b.textContent=n;
-      b.setAttribute('aria-label',`${adj.t}: оценка ${n}${n===4?' (точнее всего про вас)':''}`);
-      if(taken.includes(n)&&v!==n)b.disabled=true;
-      b.addEventListener('click',()=>{for(const k in gSc[curG])if(gSc[curG][k]===n)delete gSc[curG][k];
-        if(sc[ai]===n)delete gSc[curG][ai];else gSc[curG][ai]=n;renderG();});
+    [1,2,3,4].forEach(n=>{const b=document.createElement('button');b.className='rk'+(v===n?' on':'');b.textContent=n;
+      b.setAttribute('aria-label',`${adj.t}: оценка ${n}`);
+      b.addEventListener('click',()=>{if(sc[ai]===n)delete gSc[curG][ai];else gSc[curG][ai]=n;renderG();});
       rks.appendChild(b);});
     row.appendChild(nm);row.appendChild(rks);list.appendChild(row);
   });
-  $('btn-next').disabled=Object.keys(sc).length!==4;
+  const cnt=Object.keys(sc).length,hint=$('sum-hint');
+  if(cnt<4){hint.textContent='';hint.className='sum-hint';}
+  else if(used!==10){hint.textContent=used>10?`Сумма ${used} — уберите ${used-10}`:`Сумма ${used} — добавьте ${10-used}`;hint.className='sum-hint warn';}
+  else{hint.textContent='Сумма 10, можно дальше';hint.className='sum-hint ok';}
+  $('btn-next').disabled=!(cnt===4&&used===10);
 }
 $('btn-next').addEventListener('click',()=>{if(curG<Qs.length-1){curG++;renderG();window.scrollTo(0,0);}else finish();});
 $('btn-back').addEventListener('click',()=>{if(curG>0){curG--;renderG();window.scrollTo(0,0);}});
@@ -454,9 +460,9 @@ function buildRadar(){
     <g>${g}${ax}</g><g class="radar-data" id="radar-data"><polygon points="${dp}" fill="url(#rg)" stroke="#9D7BFF" stroke-width="2" stroke-linejoin="round"/>${dots}</g>${L}</svg>`;
 }
 function insight(s){const a=s[0][0],b=s[1][0],gap=s[0][1]-s[1][1];
-  if(gap<=4)return `У вас сильная связка ${TI[a].nm} + ${TI[b].nm}: два стиля работают почти на равных.`;
-  if(gap>=16)return `${TI[a].nm} выражен заметно сильнее остальных — это ваш опорный стиль.`;
-  return `Ведущий стиль — ${TI[a].nm}, а поддерживает его ${TI[b].nm}.`;}
+  if(gap<=4)return `У вас сильная пара: ${TI[a].nm} и ${TI[b].nm} идут почти вровень.`;
+  if(gap>=16)return `${TI[a].nm} заметно сильнее остальных. На него вы и опираетесь.`;
+  return `Ведёт у вас ${TI[a].nm}, а ${TI[b].nm} его поддерживает.`;}
 
 function renderResults(){
   $('r-name').textContent=`${uNm} ${uLn}`;$('r-date').textContent=fmtDate(new Date());
